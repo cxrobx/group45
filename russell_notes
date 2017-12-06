@@ -1,0 +1,34 @@
+
+Notes from Meeting with Russell
+
+Date Tuesday, Dec 5
+
+Different Models to Use
+- SVD (implemented)
+- Alternating Least Squares to complement and enhance SVD
+— through the surprise package, can actually make use of the one-hot encoded restaurant characteristics
+- Nearest Neighbors regression
+— Steps
+1. Take target user ui and target restaurant ri
+2. Get metric for difference between restaurant ri characteristic vector and the characteristic vector for all other restaurants. Get baseline scores through means and then find technically similar restaurants through weighting. This method totally ignores the latent factor search, and just focuses on technically similar restaurants— compare to restaurants used by ri
+2a. Be careful with zeroes, don’t want to end up with a hugely negative score (such that all scores are very low) 
+3. Get review and restaurant characteristics for the restaurant reviewed by the target user.  Get characteristic vectors for restaurants sampled by other reviewers of that restaurant. 
+3a. Use the neighboring reviewers (network analogy, if nodes are restaurants and users, we are looking at the neighborhood with distance 3 [ui -> r -> u -> ri]) to pick a restaurant that they reviewed favorably, weight by votes in either direction from mean. 
+4. Potentially combine the system through voting
+— This combination voting system of obvious and latent factors might be a suitable counterpart to the svd ensemble model.
+
+- ensemble with a voting system, either each system gets a vote, or we can use a function like GraphSearchCV to assign weights to the component models.
+
+Coding Tips
+- Instead of loading in the entire review dataset and then filtering, we can select each review with some probability, given that we are already reading in the index by iterating through rows. We can also do this to check to see if the business in question is a restaurant
+
+Other
+-Locations, not that important for our purposes (maybe in the report we can add a brief note that to incorporate location preferences, we just assign user the average latitude/longitude of their reviews, and filter restaurants that are not within some margin of that longitude and latitude)
+- Demonstrate understanding of the mathematical techniques in the final report — we want to demonstrate to the graders that we took the time to read and understand the Netflix prize documents and the importance of characteristics like latent factors. 
+— Why is this not an easy task? Human taste is incredibly complicated and hard to make predictions given very sparse information.
+
+Open Questions
+
+- Evaluation of predictive models, problem is that many users have only reviewed one restaurant, so it is very unlikely that our predictive model will recommend that exact model. We could evaluate by trying to predict stars, but we don’t have the code infrastructure in place to test that with SVD
+— MSE was recommended by Russell 
+
